@@ -188,7 +188,6 @@ function App() {
               rotateAmplitude={8}
               scaleOnHover={1.125}
               showMobileWarning={false}
-              showTooltip={false}
               displayOverlayContent={true}
               overlayContent={
                 <Card weather={weather} />

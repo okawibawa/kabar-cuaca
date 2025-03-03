@@ -1,7 +1,6 @@
 import type { SpringOptions } from "framer-motion";
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { Card } from "./card";
 
 interface TiltedCardProps {
   containerHeight?: React.CSSProperties['height'];
@@ -9,7 +8,6 @@ interface TiltedCardProps {
   scaleOnHover?: number;
   rotateAmplitude?: number;
   showMobileWarning?: boolean;
-  showTooltip?: boolean;
   overlayContent?: React.ReactNode;
   displayOverlayContent?: boolean;
 }
@@ -26,7 +24,6 @@ export default function TiltedCard({
   scaleOnHover = 1.1,
   rotateAmplitude = 14,
   showMobileWarning = true,
-  showTooltip = true,
   overlayContent = null,
   displayOverlayContent = false,
 }: TiltedCardProps) {
@@ -113,20 +110,6 @@ export default function TiltedCard({
           </>
         )}
       </motion.div>
-
-      {showTooltip && (
-        <motion.figcaption
-          className="pointer-events-none absolute left-0 top-0 rounded-[4px] bg-white px-[10px] py-[4px] text-[10px] text-[#2d2d2d] opacity-0 z-[3] hidden sm:block"
-          style={{
-            x,
-            y,
-            opacity,
-            rotate: rotateFigcaption,
-          }}
-        >
-          {captionText}
-        </motion.figcaption>
-      )}
     </figure>
   );
 }
