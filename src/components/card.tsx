@@ -2,8 +2,8 @@ import { motion } from "framer-motion"
 
 import { CloudRainIcon, DropletsIcon, WindIcon } from "lucide-react"
 
-interface Card {
-  weather: {
+interface WeatherCard {
+  weatherAndGeo: {
     current: {
       temperature_2m: number,
       weather_code: number,
@@ -19,6 +19,12 @@ interface Card {
     },
     latitude: number,
     longitude: number
+    address: {
+      city: string,
+      state: string,
+      region: string
+    },
+    display_name: string
   }
 }
 
@@ -143,13 +149,12 @@ const cardBackground: Record<number, string> = {
   99: 'bg-gradient-to-b from-gray-600 to-gray-800 shadow-[0px_30px_64px_-34px_rgba(75,_85,_99,_1)] border-[.8px] border-gray-500',
 };
 
-export const Card = ({ weather }: Card) => {
+export const Card = ({ weatherAndGeo }: WeatherCard) => {
   return (
     <>
       <div className="border border-zinc-800 p-[3px] h-full w-full bg-zinc-950 absolute top-0 left-0 object-cover rounded-2xl will-change-transform [transform:translateZ(0)] shadow-2xl shadow-zinc-950/50" />
-
       <motion.div
-        className={`${cardBackground[weather.current.weather_code] || 'bg-gradient-to-b from-zinc-500 to-zinc-700'} rounded-[13px] text-zinc-100 text-center h-full max-h-96 absolute top-2.5 left-2 right-2`}
+        className={`${cardBackground[weatherAndGeo.current.weather_code] || 'bg-gradient-to-b from-zinc-500 to-zinc-700'} rounded-[13px] text-zinc-100 text-center h-full max-h-[448px] absolute top-2.5 left-2 right-2 bottom-2.5`}
         style={{ zIndex: 1 }}
         initial={{ transform: 'translateZ(0)' }}
         animate={{ transform: 'translateZ(20px)' }}
@@ -157,7 +162,7 @@ export const Card = ({ weather }: Card) => {
       >
         <div className="py-4 px-3 h-full flex flex-col justify-between will-change-transform [transform:translateZ(30px)]">
           <motion.p
-            className="font-normal flex items-center justify-center gap-1 text-zinc-100 text-xs will-change-transform [transform:translateZ(80px)] mb-4"
+            className="font-normal flex items-center justify-center gap-1 text-zinc-100 text-sm lg:text-xs will-change-transform [transform:translateZ(80px)] mb-2 lg:mb-4"
             initial={{ transform: 'translateZ(0)' }}
             animate={{ transform: 'translateZ(80px)' }}
             transition={{ duration: 0.3 }}
@@ -166,7 +171,7 @@ export const Card = ({ weather }: Card) => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="size-3"
+              className="size-3.5 lg:size-4"
             >
               <path
                 fillRule="evenodd"
@@ -174,48 +179,48 @@ export const Card = ({ weather }: Card) => {
                 clipRule="evenodd"
               />
             </svg>
-            Bandung
+            {weatherAndGeo.address.city || weatherAndGeo.address.state || weatherAndGeo.address.region || weatherAndGeo.display_name}
           </motion.p>
 
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-2 lg:gap-4">
             <motion.img
-              src={weatherType[weather.current.weather_code] || '/cloudy.png'}
-              alt={weatherType[weather.current.weather_code] || 'Unknown'}
-              height={128}
-              width={128}
+              src={weatherType[weatherAndGeo.current.weather_code] || '/cloudy.png'}
+              alt={weatherType[weatherAndGeo.current.weather_code] || 'Unknown'}
+              height={192}
+              width={192}
               className="mx-auto will-change-transform [transform:translateZ(40px)]"
               initial={{ transform: 'translateZ(0)' }}
               animate={{ transform: 'translateZ(40px)' }}
               transition={{ duration: 0.3 }}
             />
 
-            <p className="relative text-zinc-100 font-bold text-5xl text-center will-change-transform [transform:translateZ(50px)] mb-2">
-              {weather.current.temperature_2m}
-              <small className="text-xs absolute top-0">{weather.current_units.temperature_2m}</small>
+            <p className="relative text-zinc-100 font-bold text-7xl lg:text-5xl text-center will-change-transform [transform:translateZ(50px)] mb-2">
+              {weatherAndGeo.current.temperature_2m}
+              <small className="text-xs absolute top-0">{weatherAndGeo.current_units.temperature_2m}</small>
             </p>
 
-            <p className="text-center font-medium text-zinc-100 text-sm break-words whitespace-break-spaces w-full max-w-[156px] mx-auto will-change-transform [transform:translateZ(50px)] mb-4">
-              {weatherCondition[weather.current.weather_code] || 'Unknown'}
+            <p className="text-center font-medium text-zinc-100 text-lg lg:text-sm break-words whitespace-break-spaces w-full max-w-[186px] mx-auto will-change-transform [transform:translateZ(50px)] mb-4">
+              {weatherCondition[weatherAndGeo.current.weather_code] || 'Unknown'}
             </p>
           </div>
 
           <div className="will-change-transform [transform:translateZ(50px)] flex justify-between items-center">
             <div className="text-center">
-              <WindIcon className="text-zinc-100 size-4 mx-auto" />
-              <p className="text-[10px] font-medium text-zinc-100">{weather.current.wind_speed_10m} {weather.current_units.wind_speed_10m}</p>
-              <p className="text-gray-800 font-semibold text-[8px]">Angin</p>
+              <WindIcon className="text-zinc-100 size-5 lg:size-4 mx-auto" />
+              <p className="text-[12px] lg:text-[10px] font-medium text-zinc-100">{weatherAndGeo.current.wind_speed_10m} {weatherAndGeo.current_units.wind_speed_10m}</p>
+              <p className="text-gray-800 font-semibold text-[10px] lg:text-[8px]">Angin</p>
             </div>
 
             <div className="text-center">
-              <DropletsIcon className="text-zinc-100 size-4 mx-auto" />
-              <p className="text-[10px] font-medium text-zinc-100">{weather.current.relative_humidity_2m} {weather.current_units.relative_humidity_2m}</p>
-              <p className="text-gray-800 font-semibold text-[8px]">Kelembapan</p>
+              <DropletsIcon className="text-zinc-100 size-5 lg:size-4 mx-auto" />
+              <p className="text-[12px] lg:text-[10px] font-medium text-zinc-100">{weatherAndGeo.current.relative_humidity_2m} {weatherAndGeo.current_units.relative_humidity_2m}</p>
+              <p className="text-gray-800 font-semibold text-[10px] lg:text-[8px]">Kelembapan</p>
             </div>
 
             <div className="text-center">
-              <CloudRainIcon className="text-zinc-100 size-4 mx-auto" />
-              <p className="text-[10px] font-medium text-zinc-100">{weather.current.precipitation} {weather.current_units.precipitation}</p>
-              <p className="text-gray-800 font-semibold text-[8px]">Curah Hujan</p>
+              <CloudRainIcon className="text-zinc-100 size-5 lg:size-4 mx-auto" />
+              <p className="text-[12px] lg:text-[10px] font-medium text-zinc-100">{weatherAndGeo.current.precipitation} {weatherAndGeo.current_units.precipitation}</p>
+              <p className="text-gray-800 font-semibold text-[10px] lg:text-[8px]">Curah Hujan</p>
             </div>
           </div>
         </div>
